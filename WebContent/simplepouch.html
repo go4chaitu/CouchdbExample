@@ -1,0 +1,47 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <script src="pouchjs/pouch.js"></script>
+        <title>New Web Project Page</title>
+    </head>
+    <body>
+        <h1>New Web Project Page</h1>
+        <script>
+            Pouch('idb://employee4', function(err, db) {
+                // Use db to call further functions
+                alert( 'employee4');
+                db.changes(function(err, response) {
+                	alert ( response );
+                });
+            });
+            
+            var authors = [
+              {name: 'Dale Harvey', commits: 253},
+              {name: 'Mikeal Rogers', commits: 42},
+              {name: 'Johannes J. Schmidt', commits: 13},
+              {name: 'Randall Leeds', commits: 9}
+            ];
+            
+            Pouch('idb://authors', function(err, db) {
+              // Opened a new database
+              db.bulkDocs({docs: authors}, function(err, results) {
+                // Saved the documents into the database
+                db.replicate.to('http://127.0.0.1:5984/authors', function() {
+                  // The documents are now in the cloud!
+                  alert(' document is in the cloud! ');                  
+                });
+              });
+            });
+            
+            var myCallback = function(){
+            	alert(' done!  ');
+            }
+            
+            Pouch.replicate('idb://authors', 'http://127.0.0.1:5984/authors', myCallback)
+            
+            alert('abc');
+        </script>
+    </body>
+</html>
